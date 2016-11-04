@@ -7,6 +7,10 @@
 
 namespace Polidog\ReduxReactRouterSsr;
 
+use Polidog\ReduxReactRouterSsr\Exception\NotFoundException;
+use Polidog\ReduxReactRouterSsr\Exception\RedirectException;
+use Polidog\ReduxReactRouterSsr\Exception\RootContainerNotFound;
+use Polidog\ReduxReactRouterSsr\Exception\ServiceUnavailableHttpException;
 use V8Js;
 
 final class ReduxReactRouterJs implements ReduxReactRouterInterface
@@ -38,18 +42,19 @@ final class ReduxReactRouterJs implements ReduxReactRouterInterface
         $this->appBundleSrc = $appBundleSrc;
 
         $this->v8->error = function ($container) {
+            throw new RootContainerNotFound($container);
         };
 
         $this->v8->redirect = function($code, $url) {
-
+            throw new RedirectException;
         };
 
         $this->v8->error404 = function() {
-
+            throw new NotFoundException;
         };
 
         $this->v8->error500 = function($message) {
-
+            throw new ServiceUnavailableHttpException;
         };
     }
 
